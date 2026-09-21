@@ -46,9 +46,9 @@
 		</dependency>
 
         <dependency>
-            <groupId>com.reservashoteleras</groupId>
-            <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+			<groupId>com.daniel</groupId>
+			<artifactId>commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
         </dependency>
 
 		<dependency>
