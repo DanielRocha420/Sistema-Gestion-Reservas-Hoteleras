@@ -21,23 +21,23 @@ spring:
               filters:
                 - StripPrefix=2
 
-            - id: habitacion
-              uri: lb://habitacion
+            - id: habitaciones
+              uri: lb://habitaciones
               predicates:
-                - Path=/api/habitacion/**
+                - Path=/api/habitaciones/**
               filters:
                 - StripPrefix=2
 
             - id: reservas
-              uri: lb://reservas
+              uri: lb://reserva
               predicates:
                 - Path=/api/reservas/**
               filters:
-
                 - StripPrefix=2
 
 eureka:
   instance:
+    instance-id: ${spring.application.name}:${random.value}
     prefer-ip-address: true
   client:
     register-with-eureka: true
