@@ -6,7 +6,7 @@ public class ValoresNumericosUtils {
     public static void validarLongPositivo(Long numero, String mensaje) {
         validarNumeroRequerido(numero);
 
-        if (numero < 0)
+        if (numero <= 0)
             throw new IllegalArgumentException(mensaje);
     }
 
