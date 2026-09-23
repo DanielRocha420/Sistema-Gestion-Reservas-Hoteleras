@@ -20,6 +20,7 @@ public class HabitacionMapper implements CommonMapper<HabitacionRequest, Habitac
         ValoresNumericosUtils.validarLongPositivo(request.numHabitacion(), "El número de habitación debe ser mayor a 0.");
 
         TipoHabitacion tipo = TipoHabitacion.valueOf(request.tipo().toUpperCase());
+        tipo.validarCapacidad(request.capacidad());
 
         return Habitacion.builder()
                 .numHabitacion(request.numHabitacion())

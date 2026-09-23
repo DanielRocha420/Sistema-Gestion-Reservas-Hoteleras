@@ -9,25 +9,24 @@ import java.math.BigDecimal;
 public record HabitacionRequest(
 
         @Schema(description = "Numero de habitacion", example = "101")
-        @NotNull(message = "El numero de habitacion es requerido")
-        @Positive(message = "El numero de habitacion debe ser positivo")
+        @NotNull(message = "El número de habitación es requerido")
+        @Positive(message = "El número de habitación debe ser mayor a 0")
         Long numHabitacion,
 
-        @Schema(description = "Tipo de la habitacion", example = "INDIVIDUAL", maxLength = 50)
-        @NotBlank(message = "El tipo de habitacion es requerido")
-        @Size(min = 1, max = 50, message = "El tipo de habitacion debe tener entre 1 y 50 caracteres")
+        @Schema(description = "Tipo de la habitacion", example = "INDIVIDUAL")
+        @NotBlank(message = "El tipo de habitación es requerido")
         String tipo,
 
         @Schema(description = "Precio de la habitacion", example = "123.5")
         @NotNull(message = "El precio es requerido")
-        @DecimalMin(value = "0.01", message = "El precio debe ser mayor a 0")
-        @DecimalMax(value = "100000.0", message = "El precio máximo es 100000.0")
+        @DecimalMin(value = "0.01", message = "El precio debe ser mayor a $0.01")
+        @DecimalMax(value = "100000.0", message = "El precio máximo es $100,000.00")
         BigDecimal precio,
 
-        @Schema(description = "Capacidad de la habitacion (minimo 1) (maximo 4)", example = "3",minimum = "1", maximum = "4")
+        @Schema(description = "Capacidad de la habitacion (minimo 1) (maximo 10)", example = "3",minimum = "1", maximum = "10")
         @NotNull(message = "La capacidad es requerida")
-        @Min(value = 1, message = "La capacidad minima es de 1 huesped")
-        @Max(value = 4, message = "La capacidad maxima es de 4 huespedes")
+        @Min(value = 1, message = "La capacidad mínima es 1 huésped")
+        @Max(value = 10, message = "La capacidad máxima es 10 huéspedes")
         Short capacidad
 ) {
 }
