@@ -15,11 +15,12 @@ public class HabitacionController extends CrudController<HabitacionRequest, Habi
         super(service);
     }
 
-    @GetMapping("/id-habitacion/{id}")
-    public HabitacionResponse obtenerPorNumeroHabitacion(
-            @PathVariable @Positive(message = "El ID debe ser positivo") Long id
+    @PutMapping("/{id}/tipo/{idTipo}")
+    public void actualizarTipoHabitacion(
+            @PathVariable @Positive(message = "El ID debe ser positivo") Long id,
+            @PathVariable @Positive(message = "El ID de tipo debe ser positivo") Long idTipo
     ) {
-        return service.obtenerPorNumeroHabitacion(id);
+        service.actualizarTipoHabitacion(id, idTipo);
     }
 
     @PutMapping("/{id}/estado/{idEstado}")
