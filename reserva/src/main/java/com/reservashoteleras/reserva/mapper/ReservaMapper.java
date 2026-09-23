@@ -1,33 +1,5 @@
 package com.reservashoteleras.reserva.mapper;
 
-import com.daniel.commons.dto.reserva.ReservaRequest;
-import com.daniel.commons.dto.reserva.ReservaResponse;
-import com.daniel.commons.enums.EstadoReserva;
-import com.daniel.commons.mapper.CommonMapper;
-import com.reservashoteleras.reserva.entity.Reserva;
-import org.springframework.stereotype.Component;
+public class ReservaMapper<RQ, RS, E> {
 
-@Component
-public class ReservaMapper<RQ, RS, E> implements CommonMapper<ReservaRequest, ReservaResponse, Reserva> {
-
-    @Override
-    public Reserva requestAEntidad(ReservaRequest request) {
-        if (request == null) return null;
-        return Reserva.builder()
-                .estado(EstadoReserva.CONFIRMADA)
-                .fecha_Entrada(request.fechaEntrada())
-                .fecha_Salida(request.fechaSalida())
-                .build();
-    }
-
-    @Override
-    public ReservaResponse entidadAResponse(Reserva entidad) {
-        if (entidad == null) return null;
-        return new ReservaResponse(
-                entidad.getId(),
-                entidad.getEstado(),
-                entidad.getFecha_Entrada(),
-                entidad.getFecha_Salida()
-        );
-    }
 }

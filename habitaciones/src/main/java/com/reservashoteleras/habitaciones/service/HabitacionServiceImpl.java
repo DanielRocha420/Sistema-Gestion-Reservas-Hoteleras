@@ -67,14 +67,6 @@ public class HabitacionServiceImpl implements HabitacionService {
         habitacionRepository.save(habitacion);
     }
 
-    @Override
-    public void liberar(Long id) {
-        Habitacion habitacion = obtenerEntidadPorId(id);
-        log.info("Liberando habitacion con id : {}", id);
-        habitacion.liberar();
-        habitacionRepository.save(habitacion);
-    }
-
 
 
 

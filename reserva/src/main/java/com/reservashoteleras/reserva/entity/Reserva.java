@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "RESERVA")
+@Table()
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter@Builder
@@ -21,27 +22,13 @@ public class Reserva {
     @Column(name = "ID_RESERVA", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_RESERVA", nullable = false)
     private EstadoReserva estado;
 
     @Column(name = "FECHA_ENTRADA", nullable = false)
-    private LocalDateTime fecha_Entrada;
+    private LocalDate fecha_Entrada;
 
     @Column(name = "FECHA_SALIDA", nullable = false)
-    private LocalDateTime fecha_Salida;
-
-    public void cambiarEstado(EstadoReserva nuevoEstado) {
-        this.estado = nuevoEstado;
-    }
-
-    @PrePersist
-    @PreUpdate
-    private void validarFechas() {
-        if (fecha_Entrada == null || fecha_Salida == null
-                || !fecha_Salida.toLocalDate().isAfter(fecha_Entrada.toLocalDate())) {
-            throw new IllegalArgumentException("La fecha de entrada debe ser anterior a la fecha de salida");
-        }
-    }
+    private LocalDate fecha_Salida;
 
 }

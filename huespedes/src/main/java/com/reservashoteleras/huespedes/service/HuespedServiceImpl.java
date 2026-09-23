@@ -7,10 +7,10 @@ import com.daniel.commons.exceptions.RecursoNoEncontradoException;
 import com.reservashoteleras.huespedes.entity.Huesped;
 import com.reservashoteleras.huespedes.mapper.HuespedMapper;
 import com.reservashoteleras.huespedes.repository.HuespedesRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,9 +25,9 @@ public class HuespedServiceImpl implements HuespedService {
 
 
     @Override
-    @Transactional()
+    @Transactional(readOnly = true)
     public List<HuespedResponse> listar() {
-        log.info("Iniciando lista de huespedes");
+        log.info("Iniciando lista de huespedes activos");
 
         return huespedesRepository.findByEstado(EstadoRegistro.ACTIVO).stream()
                 .map(huespedMapper::entidadAResponse)
@@ -35,7 +35,7 @@ public class HuespedServiceImpl implements HuespedService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public HuespedResponse obtenerPorId(Long id) {
         log.info("Iniciando obtenerPorId del huesped");
         Huesped huesped = buscarHuesped(id);
@@ -81,6 +81,13 @@ public class HuespedServiceImpl implements HuespedService {
         return huespedesRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException("Huesped no encontrado con id "+ id));
     }
 
+
+    private void validarCampo(String campo, String valor, boolean ocupado) {
+        if (ocupado) {
+            throw new IllegalStateException("Ya existe un huesped con el " + campo + " " + valor);
+        }
+    }
+
     private Huesped buscarHuespedActivo(Long id) {
         Huesped huesped = buscarHuesped(id);
         if (huesped.getEstado() != EstadoRegistro.ACTIVO) {
@@ -93,12 +100,6 @@ public class HuespedServiceImpl implements HuespedService {
         validarCampo("email", request.email(), ocupadoEmail(request.email(), id));
         validarCampo("telefono", request.telefono(), ocupadoTelefono(request.telefono(), id));
         validarCampo("documento", request.documento(), ocupadoDocumento(request.documento(), id));
-    }
-
-    private void validarCampo(String campo, String valor, boolean ocupado) {
-        if (ocupado) {
-            throw new IllegalStateException("Ya existe un huesped con el " + campo + " " + valor);
-        }
     }
 
     private boolean ocupadoEmail(String email, Long id) {

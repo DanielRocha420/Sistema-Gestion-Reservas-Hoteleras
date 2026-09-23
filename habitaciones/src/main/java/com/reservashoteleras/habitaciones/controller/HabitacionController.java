@@ -29,11 +29,4 @@ public class HabitacionController extends CrudController<HabitacionRequest, Habi
     ) {
         service.actualizarEstado(id, idEstado);
     }
-
-    @PutMapping("/{id}/liberar")
-    public void liberar(
-            @PathVariable @Positive(message = "El ID debe ser positivo") Long id
-    ) {
-        service.liberar(id);
-    }
 }
