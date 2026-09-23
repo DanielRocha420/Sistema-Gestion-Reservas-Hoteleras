@@ -49,12 +49,17 @@ public class Huesped {
     @Column(name = "ESTADO", nullable = false)
     private EstadoRegistro estado = EstadoRegistro.ACTIVO;
 
+    /**
+     * Restriccion: No se puede eliminar un huesped con reservas EN_CURSO
+     */
     public void eliminar() {
+        validarNoEliminado();
         this.estado = EstadoRegistro.ELIMINADO;
     }
 
     public void actualizar(String nombre, String apellidoPaterno, String apellidoMaterno, String email,
                            String telefono, String tipoDocumento, String documento, String nacionalidad) {
+        validarNoEliminado();
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -63,5 +68,11 @@ public class Huesped {
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
         this.nacionalidad = nacionalidad;
+    }
+
+    private void validarNoEliminado() {
+        if (this.estado == EstadoRegistro.ELIMINADO) {
+            throw new IllegalArgumentException("El huesped ya esta eliminado");
+        }
     }
 }
