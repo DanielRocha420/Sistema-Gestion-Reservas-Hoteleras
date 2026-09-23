@@ -29,7 +29,7 @@ public class HuespedServiceImpl implements HuespedService {
     public List<HuespedResponse> listar() {
         log.info("Iniciando lista de huespedes");
 
-        return huespedesRepository.findAll().stream()
+        return huespedesRepository.findByEstado(EstadoRegistro.ACTIVO).stream()
                 .map(huespedMapper::entidadAResponse)
                 .toList();
     }
@@ -45,16 +45,7 @@ public class HuespedServiceImpl implements HuespedService {
     @Override
     public HuespedResponse registrar(HuespedRequest request) {
         log.info("Iniciando registro del huesped");
-
-        if (huespedesRepository.existsByEmail(request.email())) {
-            throw new IllegalStateException("Ya existe un huesped con el email " + request.email());
-        }
-        if (huespedesRepository.existsByTelefono(request.telefono())) {
-            throw new IllegalStateException("Ya existe un huesped con el telefono " + request.telefono());
-        }
-        if (huespedesRepository.existsByDocumento(request.documento())) {
-            throw new IllegalStateException("Ya existe un huesped con el documento " + request.documento());
-        }
+        validarUnicidad(request, null);
         Huesped huesped = huespedMapper.requestAEntidad(request);
         return huespedMapper.entidadAResponse(huespedesRepository.save(huesped));
     }
@@ -62,20 +53,8 @@ public class HuespedServiceImpl implements HuespedService {
     @Override
     public HuespedResponse actualizar(HuespedRequest request, Long id) {
         log.info("Iniciando actualizar del huesped");
-
-        Huesped huesped = buscarHuesped(id);
-        if (huesped.getEstado() != EstadoRegistro.ACTIVO) {
-            throw new RecursoNoEncontradoException("Huesped no encontrado con id " + id);
-        }
-        if (huespedesRepository.existsByEmailAndIdNot(request.email(), id)) {
-            throw new IllegalStateException("Ya existe un huesped con el email " + request.email());
-        }
-        if (huespedesRepository.existsByTelefonoAndIdNot(request.telefono(), id)) {
-            throw new IllegalStateException("Ya existe un huesped con el telefono " + request.telefono());
-        }
-        if (huespedesRepository.existsByDocumentoAndIdNot(request.documento(), id)) {
-            throw new IllegalStateException("Ya existe un huesped con el documento " + request.documento());
-        }
+        Huesped huesped = buscarHuespedActivo(id);
+        validarUnicidad(request, id);
         huesped.actualizar(
                 request.nombre().trim(),
                 request.apellidoPaterno().trim(),
@@ -100,5 +79,43 @@ public class HuespedServiceImpl implements HuespedService {
 
     private Huesped buscarHuesped(Long id) {
         return huespedesRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException("Huesped no encontrado con id "+ id));
+    }
+
+    private Huesped buscarHuespedActivo(Long id) {
+        Huesped huesped = buscarHuesped(id);
+        if (huesped.getEstado() != EstadoRegistro.ACTIVO) {
+            throw new RecursoNoEncontradoException("Huesped no encontrado con id " + id);
+        }
+        return huesped;
+    }
+
+    private void validarUnicidad(HuespedRequest request, Long id) {
+        validarCampo("email", request.email(), ocupadoEmail(request.email(), id));
+        validarCampo("telefono", request.telefono(), ocupadoTelefono(request.telefono(), id));
+        validarCampo("documento", request.documento(), ocupadoDocumento(request.documento(), id));
+    }
+
+    private void validarCampo(String campo, String valor, boolean ocupado) {
+        if (ocupado) {
+            throw new IllegalStateException("Ya existe un huesped con el " + campo + " " + valor);
+        }
+    }
+
+    private boolean ocupadoEmail(String email, Long id) {
+        return id == null
+                ? huespedesRepository.existsByEmail(email)
+                : huespedesRepository.existsByEmailAndIdNot(email, id);
+    }
+
+    private boolean ocupadoTelefono(String telefono, Long id) {
+        return id == null
+                ? huespedesRepository.existsByTelefono(telefono)
+                : huespedesRepository.existsByTelefonoAndIdNot(telefono, id);
+    }
+
+    private boolean ocupadoDocumento(String documento, Long id) {
+        return id == null
+                ? huespedesRepository.existsByDocumento(documento)
+                : huespedesRepository.existsByDocumentoAndIdNot(documento, id);
     }
 }
