@@ -25,6 +25,14 @@ const routes: Routes = [
         canActivate: [roleGuard],
         data: { roles: [ROLES[0]]},
         loadChildren: () => import('./usuarios/usuarios.module').then(m => m.UsuariosModule)
+      },
+      {
+        path: 'habitaciones',
+        loadChildren: () => import('./habitaciones/habitaciones.module').then(m => m.HabitacionesModule)
+      },
+      {
+        path: 'huespedes',
+        loadChildren: () => import('./huespedes/huespedes.module').then(m => m.HuespedesModule)
       }
     ]
   },
