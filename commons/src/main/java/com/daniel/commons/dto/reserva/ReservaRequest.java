@@ -2,6 +2,7 @@ package com.daniel.commons.dto.reserva;
 
 import com.daniel.commons.enums.EstadoReserva;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -17,17 +18,18 @@ public record ReservaRequest(
         @NotNull(message = "La habitacion es requerida")
         @Positive(message = "El numero de habitacion debe ser positivo")
         @Schema(description = "Numero de la habitacion a reservar", example = "1")
-        Long idHabitacion,
+        Long numHabitacion,
 
-        @Schema(description = "Estado de reserva. Al registrar siempre queda CONFIRMADA", example = "CONFIRMADA")
+        @NotBlank(message = "El estado de la reserva es requerido")
+        @Schema(description = "Estado de reserva", example = "EN_CURSO")
         EstadoReserva estadoReserva,
 
-        @NotNull(message = "La fecha de entrada es requerida")
-        @Schema(description = "Fecha representativa de entrada", example = "2026-10-20T00:00:00")
+        @NotBlank(message = "La fecha de entrada es requrida")
+        @Schema(description = "Fecha de entrada de la reserva", example = "20/10/26")
         LocalDateTime fechaEntrada,
 
-        @NotNull(message = "La fecha de salida es requerida")
-        @Schema(description = "Fecha representativa de salida", example = "2026-10-25T00:00:00")
+        @NotBlank(message = "La fecha de salida es requerida")
+        @Schema(description = "Fecha de salida de la reseva", example = "25/10/26")
         LocalDateTime fechaSalida
 ) {
 }

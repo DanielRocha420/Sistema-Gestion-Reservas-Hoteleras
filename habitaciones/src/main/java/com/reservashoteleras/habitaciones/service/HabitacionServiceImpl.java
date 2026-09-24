@@ -12,7 +12,6 @@ import com.reservashoteleras.habitaciones.repository.HabitacionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class HabitacionServiceImpl implements HabitacionService {
     private final HabitacionMapper habitacionMapper;
 
     @Override
-    @Transactional(readOnly = true)
     public List<HabitacionResponse> listar() {
         log.info("Listando todas las habitaciones");
         return  habitacionRepository.findByEstadoRegistro(EstadoRegistro.ACTIVO).stream()
@@ -39,8 +37,15 @@ public class HabitacionServiceImpl implements HabitacionService {
         return habitacionMapper.entidadAResponse(habitacion);
     }
 
+    private Habitacion obtenerEntidadPorId(Long id) {
+        log.info("Buscando habitacion activa con id {}", id);
+        return habitacionRepository.findByNumHabitacionAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Habitacion activa no encontrada con id: " + id));
+    }
+
+
+
     @Override
-    @Transactional
     public void actualizarTipoHabitacion(Long numHabitacion, Long idTipo) {
         Habitacion habitacion = obtenerEntidadPorId(numHabitacion);
         log.info("Actualizando tipo de habitacion con id : {}", numHabitacion);
@@ -52,7 +57,6 @@ public class HabitacionServiceImpl implements HabitacionService {
     }
 
     @Override
-    @Transactional
     public void actualizarEstado(Long id, Long idEstado) {
         Habitacion habitacion = obtenerEntidadPorId(id);
         log.info("Actualizando estado de habitacion con id : {}", id);
@@ -64,7 +68,18 @@ public class HabitacionServiceImpl implements HabitacionService {
     }
 
     @Override
-    @Transactional
+    public void liberar(Long id) {
+        Habitacion habitacion = obtenerEntidadPorId(id);
+        log.info("Liberando habitacion con id : {}", id);
+        habitacion.liberar();
+        habitacionRepository.save(habitacion);
+    }
+
+
+
+
+
+    @Override
     public HabitacionResponse registrar(HabitacionRequest request) {
         log.info("Registrando nueva habitacion con numero: {}", request.numHabitacion());
 
@@ -80,7 +95,6 @@ public class HabitacionServiceImpl implements HabitacionService {
     }
 
     @Override
-    @Transactional
     public HabitacionResponse actualizar(HabitacionRequest request, Long id) {
         log.info("Actualizando habitacion con id: {}", id);
 
@@ -95,7 +109,6 @@ public class HabitacionServiceImpl implements HabitacionService {
     }
 
     @Override
-    @Transactional
     public void eliminar(Long id) {
         log.info("Eliminando habitacion con id: {}", id);
 
@@ -105,10 +118,11 @@ public class HabitacionServiceImpl implements HabitacionService {
         habitacionRepository.save(habitacion);
     }
 
-
-    private Habitacion obtenerEntidadPorId(Long id) {
-        log.info("Buscando habitacion activa con id {}", id);
-        return habitacionRepository.findByNumHabitacionAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Habitacion activa no encontrada con id: " + id));
+    @Override
+    public HabitacionResponse obtenerPorNumeroHabitacion(Long numHabitacion) {
+        log.info("Buscando habitacion activa con numero: {}", numHabitacion);
+        Habitacion habitacion = habitacionRepository.findByNumHabitacionAndEstadoRegistro(numHabitacion, EstadoRegistro.ACTIVO)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Habitacion activa no encontrada con numero: " + numHabitacion));
+        return habitacionMapper.entidadAResponse(habitacion);
     }
 }

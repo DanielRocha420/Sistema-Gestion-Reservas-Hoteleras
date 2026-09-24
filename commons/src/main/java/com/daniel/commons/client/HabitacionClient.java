@@ -1,4 +1,4 @@
-package com.reservashoteleras.reserva.client;
+package com.daniel.commons.client;
 
 import com.daniel.commons.dto.habitacion.HabitacionResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,3 +18,4 @@ public interface HabitacionClient {
     @PutMapping("/habitaciones/{id}/liberar")
     void liberar(@PathVariable("id") Long id);
 }
+

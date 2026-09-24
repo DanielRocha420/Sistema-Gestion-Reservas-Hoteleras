@@ -47,11 +47,6 @@ public class Habitacion {
         this.estado = nuevoEstado;
     }
 
-    public void liberar() {
-        validarNoEliminado();
-        this.estado = EstadoHabitacion.DISPONIBLE;
-    }
-
     public void eliminar(){
         validarNoEliminado();
         validarNoOcupada();

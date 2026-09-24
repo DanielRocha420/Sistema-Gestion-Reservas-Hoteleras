@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "RESERVA")
+@Table()
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter@Builder
@@ -21,7 +22,6 @@ public class Reserva {
     @Column(name = "ID_RESERVA", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_RESERVA", nullable = false)
     private EstadoReserva estado;
 
@@ -33,6 +33,10 @@ public class Reserva {
 
     public void cambiarEstado(EstadoReserva nuevoEstado) {
         this.estado = nuevoEstado;
+    }
+
+    public void cambiarFechaSalida(LocalDateTime fechaSalida) {
+        this.fecha_Salida = fechaSalida;
     }
 
     @PrePersist
