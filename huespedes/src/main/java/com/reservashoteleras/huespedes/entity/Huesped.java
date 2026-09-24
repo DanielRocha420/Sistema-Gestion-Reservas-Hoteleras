@@ -2,6 +2,8 @@ package com.reservashoteleras.huespedes.entity;
 
 
 import com.daniel.commons.enums.EstadoRegistro;
+import com.daniel.commons.utils.StringCustomUtils;
+import com.daniel.commons.utils.ValoresNumericosUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +61,11 @@ public class Huesped {
 
     public void actualizar(String nombre, String apellidoPaterno, String apellidoMaterno, String email,
                            String telefono, String tipoDocumento, String documento, String nacionalidad) {
+
         validarNoEliminado();
+
+        validadDatos(nombre, apellidoPaterno, apellidoMaterno, email, telefono);
+
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -70,6 +76,23 @@ public class Huesped {
         this.nacionalidad = nacionalidad;
     }
 
+    /**
+     *Validacion para el tamaño del campo
+     */
+
+    private void validadDatos(String nombre, String apellidoPaterno, String apellidoMaterno, String email, String telefono){
+
+        StringCustomUtils.validarTamanio(nombre, 2, 50, "El nombre es requerido y debe tener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(apellidoPaterno, 2, 50, "El apellido paterno es requerido y debe tener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(apellidoMaterno, 2, 50, "El apellido materno es requerido y debe tener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(email, 2, 100, "El email es requerido y debe tener entre 1 y 100 caracteres");
+        StringCustomUtils.validarTamanio(telefono, 10, 10, "El telefono es requerido y debe tener 10 dígitos");
+
+    }
+
+    /**
+     * Validacion de que el huesped no esté eliminado
+     */
     private void validarNoEliminado() {
         if (this.estado == EstadoRegistro.ELIMINADO) {
             throw new IllegalArgumentException("El huesped ya esta eliminado");

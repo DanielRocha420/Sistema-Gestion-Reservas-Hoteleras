@@ -18,3 +18,4 @@ public interface HabitacionClient {
     @PutMapping("/habitaciones/{id}/liberar")
     void liberar(@PathVariable("id") Long id);
 }
+
