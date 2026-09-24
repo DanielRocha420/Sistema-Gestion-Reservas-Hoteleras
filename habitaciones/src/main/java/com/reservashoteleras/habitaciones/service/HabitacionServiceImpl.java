@@ -65,6 +65,17 @@ public class HabitacionServiceImpl implements HabitacionService {
 
     @Override
     @Transactional
+    public void liberar(Long id) {
+        Habitacion habitacion = obtenerEntidadPorId(id);
+        log.info("Liberando habitacion con id : {}", id);
+
+        habitacion.liberar();
+
+        habitacionRepository.save(habitacion);
+    }
+
+    @Override
+    @Transactional
     public HabitacionResponse registrar(HabitacionRequest request) {
         log.info("Registrando nueva habitacion con numero: {}", request.numHabitacion());
 

@@ -1,4 +1,4 @@
-package com.reservashoteleras.reserva.client;
+package com.daniel.commons.client;
 
 import com.daniel.commons.dto.huesped.HuespedResponse;
 import org.springframework.cloud.openfeign.FeignClient;
