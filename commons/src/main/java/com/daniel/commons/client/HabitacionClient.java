@@ -1,12 +1,13 @@
 package com.daniel.commons.client;
 
+import com.daniel.commons.configuration.FeignClientConfig;
 import com.daniel.commons.dto.habitacion.HabitacionResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient(name = "habitaciones", url = "${habitaciones.service.url}")
+@FeignClient(name = "habitaciones", configuration = FeignClientConfig.class)
 public interface HabitacionClient {
 
     @GetMapping("/habitaciones/{id}")

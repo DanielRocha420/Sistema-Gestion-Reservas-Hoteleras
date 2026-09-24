@@ -17,6 +17,9 @@ public record ReservaResponse(
         LocalDateTime fecha_Entrada,
 
         @Schema(description = "Fecha de salida de la reserva")
-        LocalDateTime fecha_Salida
+        LocalDateTime fecha_Salida,
+
+        @Schema(description = "Número de habitación de la reserva")
+        Long numHabitacion
 ) {
 }

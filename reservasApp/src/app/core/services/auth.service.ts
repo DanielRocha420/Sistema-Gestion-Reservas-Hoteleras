@@ -12,7 +12,7 @@ import { JwtHelper } from '../utils/jwt.helper';
 })
 export class AuthService {
 
-  private readonly loginUrl = `${environment.authUrl}/api/auth/login`;
+  private readonly loginUrl = `${environment.authUrl}/api/login`;
   private readonly tokenKey = 'auth_token';
 
   constructor(

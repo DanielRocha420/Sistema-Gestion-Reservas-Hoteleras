@@ -6,15 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table()
+@Table(name = "RESERVA")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter@Builder
+@Getter
+@Builder
 public class Reserva {
 
     @Id
@@ -22,7 +22,8 @@ public class Reserva {
     @Column(name = "ID_RESERVA", nullable = false)
     private Long id;
 
-    @Column(name = "ESTADO_RESERVA", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO_RESERVA", nullable = false, length = 50)
     private EstadoReserva estado;
 
     @Column(name = "FECHA_ENTRADA", nullable = false)
@@ -31,12 +32,56 @@ public class Reserva {
     @Column(name = "FECHA_SALIDA", nullable = false)
     private LocalDateTime fecha_Salida;
 
+    @Column(name = "NUM_HABITACION", nullable = false)
+    private Long numHabitacion;
+
     public void cambiarEstado(EstadoReserva nuevoEstado) {
+        this.estado.validarCambio(nuevoEstado);
         this.estado = nuevoEstado;
     }
 
+    public void setEstado(EstadoReserva estado) {
+        this.estado = estado;
+    }
+
+    public void setNumHabitacion(Long numHabitacion) {
+        this.numHabitacion = numHabitacion;
+    }
+
+    public void cambiarFechaEntrada(LocalDateTime fechaEntrada) {
+        this.estado.validarModificacionFechaEntrada();
+        this.fecha_Entrada = fechaEntrada;
+    }
+
     public void cambiarFechaSalida(LocalDateTime fechaSalida) {
+        this.estado.validarModificacionFechaSalida();
         this.fecha_Salida = fechaSalida;
+    }
+
+    public void cambiarFechas(LocalDateTime fechaEntrada, LocalDateTime fechaSalida) {
+        this.estado.validarModificacionFechas();
+        this.fecha_Entrada = fechaEntrada;
+        this.fecha_Salida = fechaSalida;
+    }
+
+    public void cambiarHabitacion(Long numHabitacion) {
+        this.estado.validarModificacionHabitacion();
+        this.numHabitacion = numHabitacion;
+    }
+
+    public void checkIn() {
+        this.estado.validarCambio(EstadoReserva.EN_CURSO);
+        this.estado = EstadoReserva.EN_CURSO;
+    }
+
+    public void checkOut() {
+        this.estado.validarCambio(EstadoReserva.FINALIZADA);
+        this.estado = EstadoReserva.FINALIZADA;
+    }
+
+    public void cancelar() {
+        this.estado.validarCambio(EstadoReserva.CANCELADA);
+        this.estado = EstadoReserva.CANCELADA;
     }
 
     @PrePersist
@@ -47,5 +92,4 @@ public class Reserva {
             throw new IllegalArgumentException("La fecha de entrada debe ser anterior a la fecha de salida");
         }
     }
-
 }
