@@ -4,57 +4,61 @@ server:
 spring:
   application:
     name: gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
   cloud:
-    loadbalancer:
-      enabled: true
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: false
-          routes:
-            - id: auth-login
-              uri: http://localhost:9000
-              predicates:
-                - Path=/api/auth/login
-              filters:
-                - RewritePath=/api/auth/login, /api/login
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: auth-login
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/auth/login
+          filters:
+            - RewritePath=/api/auth/login, /api/login
 
-            - id: auth-admin
-              uri: http://localhost:9000
-              predicates:
-                - Path=/api/auth/admin/**
-              filters:
-                - RewritePath=/api/auth/(?<segment>.*), /${segment}
+        - id: auth-admin
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/auth/admin/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /${segment}
 
-            - id: huespedes
-              uri: lb://huespedes
-              predicates:
-                - Path=/api/huespedes/**
-              filters:
-                - StripPrefix=2
+        - id: huespedes
+          uri: lb://huespedes
+          predicates:
+            - Path=/api/huespedes/**
+          filters:
+            - StripPrefix=1
 
-            - id: habitaciones
-              uri: lb://habitaciones
-              predicates:
-                - Path=/api/habitaciones/**
-              filters:
-                - StripPrefix=1
+        - id: habitaciones
+          uri: lb://habitaciones
+          predicates:
+            - Path=/api/habitaciones/**
+          filters:
+            - StripPrefix=1
 
-            - id: reservas
-              uri: lb://reserva
-              predicates:
-                - Path=/api/reservas/**
-              filters:
-                - StripPrefix=1
+        - id: reservas
+          uri: lb://reserva
+          predicates:
+            - Path=/api/reservas/**
+          filters:
+            - StripPrefix=1
 
 eureka:
-  instance:
-    instance-id: ${spring.application.name}:${random.value}
-    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
+    restclient:
+      enabled: true
+    jersey:
+      enabled: false
+    webclient:
+      enabled: false
     service-url:
       defaultZone: http://localhost:8761/eureka/

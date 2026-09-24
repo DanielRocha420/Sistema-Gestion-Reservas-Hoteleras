@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
 
-  private readonly baseUrl = `${environment.apiUrl}/api/auth/admin/usuarios`;
+  private readonly baseUrl = `${environment.authUrl}/admin/usuarios`;
 
   constructor(private http: HttpClient) { }
 

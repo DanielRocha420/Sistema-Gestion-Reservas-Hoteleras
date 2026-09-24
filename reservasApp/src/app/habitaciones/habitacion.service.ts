@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class HabitacionService {
 
-  private readonly baseUrl = `${environment.apiUrl}/api/habitaciones`;
+  private readonly baseUrl = `${environment.habitacionesUrl}/habitaciones`;
 
   constructor(private http: HttpClient) { }
 

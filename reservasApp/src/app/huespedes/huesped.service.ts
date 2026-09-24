@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class HuespedService {
 
-  private readonly baseUrl = `${environment.apiUrl}/api/huespedes`;
+  private readonly baseUrl = `${environment.huespedesUrl}/huespedes`;
 
   constructor(private http: HttpClient) { }
 
