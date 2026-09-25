@@ -1,6 +1,7 @@
 package com.reservashoteleras.reserva.entity;
 
 import com.daniel.commons.enums.EstadoReserva;
+import com.daniel.commons.enums.EstadoRegistro;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,13 @@ public class Reserva {
     @Column(name = "NUM_HABITACION", nullable = false)
     private Long numHabitacion;
 
+    @Column(name = "ID_HUESPED", nullable = false)
+    private Long idHuesped;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO_REGISTRO", nullable = false, length = 20)
+    private EstadoRegistro estadoRegistro;
+
     public void cambiarEstado(EstadoReserva nuevoEstado) {
         this.estado.validarCambio(nuevoEstado);
         this.estado = nuevoEstado;
@@ -46,6 +54,10 @@ public class Reserva {
 
     public void setNumHabitacion(Long numHabitacion) {
         this.numHabitacion = numHabitacion;
+    }
+
+    public void setIdHuesped(Long idHuesped) {
+        this.idHuesped = idHuesped;
     }
 
     public void cambiarFechaEntrada(LocalDateTime fechaEntrada) {
@@ -84,12 +96,19 @@ public class Reserva {
         this.estado = EstadoReserva.CANCELADA;
     }
 
+    public void eliminar() {
+        this.estadoRegistro = EstadoRegistro.ELIMINADO;
+    }
+
     @PrePersist
     @PreUpdate
     private void validarFechas() {
         if (fecha_Entrada == null || fecha_Salida == null
                 || !fecha_Salida.toLocalDate().isAfter(fecha_Entrada.toLocalDate())) {
             throw new IllegalArgumentException("La fecha de entrada debe ser anterior a la fecha de salida");
+        }
+        if (estadoRegistro == null) {
+            estadoRegistro = EstadoRegistro.ACTIVO;
         }
     }
 }

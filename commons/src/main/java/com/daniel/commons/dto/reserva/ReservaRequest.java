@@ -20,16 +20,16 @@ public record ReservaRequest(
         @Schema(description = "Numero de la habitacion a reservar", example = "1")
         Long numHabitacion,
 
-        @NotBlank(message = "El estado de la reserva es requerido")
+        @NotNull(message = "El estado de la reserva es requerido")
         @Schema(description = "Estado de reserva", example = "EN_CURSO")
         EstadoReserva estadoReserva,
 
-        @NotBlank(message = "La fecha de entrada es requrida")
+        @NotNull(message = "La fecha de entrada es requerida")
         @Schema(description = "Fecha de entrada de la reserva", example = "20/10/26")
         LocalDateTime fechaEntrada,
 
-        @NotBlank(message = "La fecha de salida es requerida")
-        @Schema(description = "Fecha de salida de la reseva", example = "25/10/26")
+        @NotNull(message = "La fecha de salida es requerida")
+        @Schema(description = "Fecha de salida de la reserva", example = "25/10/26")
         LocalDateTime fechaSalida
 ) {
 }

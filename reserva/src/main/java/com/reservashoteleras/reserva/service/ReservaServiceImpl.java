@@ -44,7 +44,10 @@ public class ReservaServiceImpl implements ReservaService{
     @Override
     public List<ReservaResponse> listar() {
         log.info("Iniciando listar Reservas");
-        return List.of();
+        return reservaRepository.findAll().stream()
+                .filter(reserva -> reserva.getEstadoRegistro() == EstadoRegistro.ACTIVO)
+                .map(reservaMapper::entidadAResponse)
+                .toList();
     }
 
     @Override
@@ -88,9 +91,10 @@ public class ReservaServiceImpl implements ReservaService{
     @Override
     @Transactional
     public void eliminar(Long id) {
-        log.info("Iniciando eliminar el huesped");
+        log.info("Iniciando eliminar lógicamente la reserva {}", id);
         Reserva reserva = buscarReserva(id);
-        reservaRepository.delete(reserva);
+        reserva.eliminar();
+        reservaRepository.save(reserva);
     }
 
     @Override
@@ -149,7 +153,14 @@ public class ReservaServiceImpl implements ReservaService{
     private void actualizarHabitacionSegunEstado(Reserva reserva, ReservaRequest request) {
         Long nuevaHabitacion = request.numHabitacion();
         if (nuevaHabitacion != null && !nuevaHabitacion.equals(reserva.getNumHabitacion())) {
+            Long habitacionAnterior = reserva.getNumHabitacion();
             reserva.cambiarHabitacion(nuevaHabitacion);
+
+            // Liberar la habitación anterior
+            habitacionClient.liberar(habitacionAnterior);
+
+            // Ocupar la nueva habitación
+            habitacionClient.actualizarEstado(nuevaHabitacion, EstadoHabitacion.OCUPADA.getCodigo());
         }
     }
 

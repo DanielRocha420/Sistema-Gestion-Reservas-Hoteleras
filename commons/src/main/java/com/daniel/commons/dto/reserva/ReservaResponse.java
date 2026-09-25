@@ -1,6 +1,7 @@
 package com.daniel.commons.dto.reserva;
 
 import com.daniel.commons.enums.EstadoReserva;
+import com.daniel.commons.enums.EstadoRegistro;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,12 @@ public record ReservaResponse(
         LocalDateTime fecha_Salida,
 
         @Schema(description = "Número de habitación de la reserva")
-        Long numHabitacion
+        Long numHabitacion,
+
+        @Schema(description = "ID del huésped")
+        Long idHuesped,
+
+        @Schema(description = "Estado de registro")
+        EstadoRegistro estadoRegistro
 ) {
 }

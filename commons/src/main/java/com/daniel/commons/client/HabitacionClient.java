@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient(name = "habitaciones", configuration = FeignClientConfig.class)
+@FeignClient(name = "habitaciones", url = "http://localhost:8082", configuration = FeignClientConfig.class)
 public interface HabitacionClient {
 
     @GetMapping("/habitaciones/{id}")

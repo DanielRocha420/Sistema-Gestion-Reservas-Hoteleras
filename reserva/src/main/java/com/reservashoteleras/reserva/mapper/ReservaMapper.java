@@ -17,6 +17,7 @@ public class ReservaMapper implements CommonMapper<ReservaRequest, ReservaRespon
                 .fecha_Entrada(request.fechaEntrada())
                 .fecha_Salida(request.fechaSalida())
                 .numHabitacion(request.numHabitacion())
+                .idHuesped(request.idHuesped())
                 .build();
     }
 
@@ -28,7 +29,9 @@ public class ReservaMapper implements CommonMapper<ReservaRequest, ReservaRespon
                 entidad.getEstado(),
                 entidad.getFecha_Entrada(),
                 entidad.getFecha_Salida(),
-                entidad.getNumHabitacion()
+                entidad.getNumHabitacion(),
+                entidad.getIdHuesped(),
+                entidad.getEstadoRegistro()
         );
     }
 }
